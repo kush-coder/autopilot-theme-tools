@@ -1,0 +1,48 @@
+{
+  "name": "@shopify/theme-check-node",
+  "version": "3.30.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "CP Clermont <cp.clermont@shopify.com>",
+  "homepage": "https://github.com/Shopify/theme-tools/tree/main/packages/theme-check-node#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shopify/theme-tools.git",
+    "directory": "packages/theme-check-node"
+  },
+  "bugs": {
+    "url": "https://github.com/Shopify/theme-tools/issues"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "@shopify:registry": "https://registry.npmjs.org"
+  },
+  "files": [
+    "configs/*",
+    "dist/**/*.js",
+    "dist/**/*.ts"
+  ],
+  "scripts": {
+    "build": "pnpm build:ts",
+    "build:ci": "pnpm build",
+    "build:ts": "tsc -b tsconfig.build.json",
+    "postbuild:ts": "pnpm generate-factory-configs",
+    "generate-factory-configs": "node scripts/generate-factory-configs",
+    "test": "vitest",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@shopify/liquid-html-parser": "workspace:2.10.2",
+    "@shopify/theme-check-common": "workspace:3.30.1",
+    "@shopify/theme-check-docs-updater": "workspace:3.30.1",
+    "@shopify/theme-graph": "workspace:^0.3.5",
+    "glob": "^8.0.3",
+    "vscode-uri": "^3.0.7",
+    "yaml": "^2.8.3"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "mktemp": "^1.0.1"
+  }
+}

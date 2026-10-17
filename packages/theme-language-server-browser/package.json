@@ -1,0 +1,33 @@
+{
+  "name": "@shopify/theme-language-server-browser",
+  "version": "2.23.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "CP Clermont <cp.clermont@shopify.com>",
+  "homepage": "https://github.com/Shopify/theme-tools/tree/main/packages/theme-language-server-browser#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shopify/theme-tools.git",
+    "directory": "packages/theme-language-server-browser"
+  },
+  "bugs": {
+    "url": "https://github.com/Shopify/theme-tools/issues"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "@shopify:registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "build": "pnpm build:ts",
+    "build:ci": "pnpm build",
+    "build:ts": "tsc -b tsconfig.build.json",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@shopify/theme-language-server-common": "workspace:2.23.1",
+    "vscode-languageserver": "^8.0.2"
+  }
+}

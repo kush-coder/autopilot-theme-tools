@@ -1,0 +1,79 @@
+{
+  "name": "theme-tools",
+  "version": "1.0.0",
+  "description": "The Swiss Army Knife for Shopify Liquid themes. Everything you need in one handy monorepo!",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shopify/theme-tools.git"
+  },
+  "author": "Albert Chu <albert.chu@shopify.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/lang-*",
+    "packages/codemirror-language-client",
+    "packages/liquid-html-parser",
+    "packages/prettier-plugin-liquid",
+    "packages/theme-check-*",
+    "packages/theme-graph",
+    "packages/theme-language-server-*",
+    "packages/vscode-extension",
+    "packages/release-orchestrator"
+  ],
+  "scripts": {
+    "admin:build": "sh ./scripts/dev-admin-build.sh",
+    "admin:init": "sh ./scripts/dev-admin-init.sh",
+    "build": "pnpm -r --workspace-concurrency=1 build",
+    "build:ci": "pnpm -r --workspace-concurrency=1 build:ci",
+    "build:ts": "pnpm -r --workspace-concurrency=1 build:ts",
+    "dev:web": "pnpm --dir packages/vscode-extension dev:web",
+    "format": "prettier --write \"packages/*/src/**/*.ts\"",
+    "format:check": "prettier --check --ignore-unknown \"packages/*/src/**/*.ts\"",
+    "playground": "pnpm --dir packages/codemirror-language-client dev:playground",
+    "prebuild:ts": "rm -rf packages/*/dist",
+    "publish:vsce": "pnpm --dir packages/vscode-extension publish:vsce",
+    "publish:ovsx": "pnpm --dir packages/vscode-extension publish:ovsx",
+    "release": "pnpm --filter release-orchestrator start",
+    "postrelease": "pnpm --dir packages/prettier-plugin-liquid prerelease",
+    "reset": "find . -name \"node_modules\" -type d -prune -exec rm -rf '{}' +",
+    "test": "vitest",
+    "test:e2e": "pnpm test:e2e:browser",
+    "test:e2e:browser": "pnpm --dir packages/vscode-extension test:web",
+    "theme-check": "node packages/theme-check-node/dist/cli.js",
+    "type-check": "pnpm -r --workspace-concurrency=1 type-check"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.26.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.7.3",
+    "html-webpack-plugin": "^5.5.0",
+    "jsdom": "^22.1.0",
+    "prettier": "^3.0.0",
+    "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "typescript": "^5.9.0",
+    "vite": "^6.4.3",
+    "vitest": "^4.1.11",
+    "vscode-languageserver-protocol": "^3.17.3",
+    "vscode-languageserver-textdocument": "^1.0.8",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.0.0",
+    "webpack-dev-server": "^5.2.6"
+  },
+  "packageManager": "pnpm@10.16.1",
+  "pnpm": {
+    "overrides": {
+      "@playwright/browser-chromium": "1.60.0",
+      "playwright": "1.60.0",
+      "playwright-core": "1.60.0"
+    },
+    "onlyBuiltDependencies": [
+      "@playwright/browser-chromium",
+      "@vscode/vsce-sign",
+      "esbuild",
+      "keytar"
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+import { describe, beforeEach, it, expect } from 'vitest';
+import { InsertTextFormat } from 'vscode-languageserver';
+import { DocumentManager } from '../../documents';
+import { CompletionsProvider } from '../CompletionsProvider';
+import { MetafieldDefinitionMap } from '@shopify/theme-check-common';
+
+describe('Module: TranslationCompletionProvider', async () => {
+  let provider: CompletionsProvider;
+
+  beforeEach(async () => {
+    provider = new CompletionsProvider({
+      documentManager: new DocumentManager(),
+      themeDocset: {
+        filters: async () => [],
+        objects: async () => [],
+        liquidDrops: async () => [],
+        tags: async () => [],
+        systemTranslations: async () => ({}),
+      },
+      getMetafieldDefinitions: async (_rootUri: string) => ({}) as MetafieldDefinitionMap,
+      getTranslationsForURI: async (_) => ({
+        general: {
+          username_html: '<b>username</b>',
+          password: 'password',
+          comments: {
+            one: '{{ count }} comment',
+            other: '{{ count }} comments',
+          },
+        },
+      }),
+    });
+  });
+
+  it('should complete translations correctly', async () => {
+    await expect(provider).to.complete('{{ "genera', [
+      '"general.username_html" | t',
+      '"general.password" | t',
+      '"general.comments" | t',
+    ]);
+
+    // Why all three you ask? Because we want to support fuzzy matching.
+    // We leave filtering up to the client.
+    await expect(provider).to.complete('{{ "general.comments', [
+      '"general.username_html" | t',
+      '"general.password" | t',
+      expect.objectContaining({
+        documentation: {
+          kind: 'markdown',
+          value: expect.stringMatching(/one(.|\n)*comment(.|\n)*other(.|\n)*comments/m),
+        },
+      }),
+    ]);
+    await expect(provider).to.complete('{{ "general.passwo█" }}', [
+      '"general.username_html" | t',
+      expect.objectContaining({
+        label: '"general.password" | t',
+        insertText: 'password',
+        textEdit: expect.objectContaining({
+          newText: 'general.password" | t',
+        }),
+      }),
+      '"general.comments" | t',
+    ]);
+  });
+
+  it('completes translation keys (not filter names) when the caret is on the string before a pipe', async () => {
+    // F: the caret sits on the translation-key string, with a `t` filter (or a
+    // bare pipe) after it. Complete translation keys, not the filter.
+    await expect(provider).to.complete('{{ "general.█" | t }}', [
+      '"general.username_html" | t',
+      '"general.password" | t',
+      '"general.comments" | t',
+    ]);
+    await expect(provider).to.complete('{{ "general.█" | }}', [
+      '"general.username_html" | t',
+      '"general.password" | t',
+      '"general.comments" | t',
+    ]);
+  });
+
+  it('should add snippet tab stops for translation variables', async () => {
+    await expect(provider).to.complete('{{ "general.comments█" }}', [
+      '"general.username_html" | t',
+      '"general.password" | t',
+      expect.objectContaining({
+        label: '"general.comments" | t',
+        insertTextFormat: InsertTextFormat.Snippet,
+        textEdit: expect.objectContaining({
+          newText: expect.stringContaining('count: ${1:count}'),
+        }),
+      }),
+    ]);
+  });
+});

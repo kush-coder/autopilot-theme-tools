@@ -1,0 +1,4 @@
+deploy:
+  override:
+    - pnpm install
+    - pnpm build && npm publish

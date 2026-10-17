@@ -1,0 +1,19 @@
+{
+  "name": "release-orchestrator",
+  "version": "1.2.1",
+  "description": "Internal theme-tools package for handling the release process.",
+  "main": "dist/index.js",
+  "author": "Albert Chu <albert.chu@shopify.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "pnpm build:ts",
+    "build:ci": "pnpm build",
+    "build:ts": "tsc -b tsconfig.build.json",
+    "start": "pnpm build && node dist/index.js",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.8"
+  }
+}

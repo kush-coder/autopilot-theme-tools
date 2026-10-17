@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["**/*.spec.ts"],
+  "references": [
+    { "path": "../theme-check-common/tsconfig.build.json" },
+    { "path": "../theme-check-docs-updater/tsconfig.build.json" },
+    { "path": "../theme-graph/tsconfig.build.json" }
+  ]
+}

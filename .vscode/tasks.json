@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "command": "pnpm --dir packages/vscode-extension run build:extension:dev",
+      "group": "build",
+      "label": "vscode dev",
+      "dependsOrder": "sequence",
+      "problemMatcher": "$ts-checker-webpack",
+      "dependsOn": [
+        "theme check build",
+        "language-config"
+      ],
+    },
+    {
+      "label": "language-config",
+      "type": "shell",
+      "command": "pnpm --dir packages/vscode-extension run build:language-config"
+    },
+    {
+      "label": "theme check build",
+      "type": "shell",
+      "command": "pnpm --dir packages/theme-check-node run build:ts"
+    },
+    {
+      "label": "playground",
+      "type": "shell",
+      "command": "pnpm playground",
+      "isBackground": true,
+      "problemMatcher": "$ts-webpack-watch"
+    },
+    {
+      "label": "vscode-test-web",
+      "type": "shell",
+      "command": "pnpm dev:web",
+      "isBackground": true
+    }
+  ],
+}
